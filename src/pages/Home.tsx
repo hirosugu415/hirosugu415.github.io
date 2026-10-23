@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Box, Button, Card, CardActionArea, CardContent, Link, Stack, Typography } from "@mui/material";
-import { Section } from "../components/Layout";
+import { AboutBackdrop } from "../components/AboutBackdrop";
+import { Section, SOCIAL } from "../components/Layout";
 import { DummyNote, Eyebrow, Kbd, LinkChips, Meta, Period, Prose, Shot } from "../components/parts";
 import { PERIODS, WORK } from "../content/work";
 
@@ -39,6 +40,9 @@ const PERIOD_LABEL: Record<(typeof PERIODS)[number], string> = {
 
 /** Rmemo の紹介ページ。タイトル・動画・ボタンのどれを押しても、ここへ飛ぶ */
 const RMEMO_SITE = "https://hirosugu415.github.io/Rmemo/";
+
+/** Highlights の2段目に並べる、社内システムの一押し（1段目は Rmemo と test） */
+const HIGHLIGHT_WORK = ["perf", "mobile", "docs"];
 
 const ZENN: [string, string][] = [
   ["https://zenn.dev/hiro_tech415/articles/bcda76ce48accf", "メモ帳を毎日使っていた僕が、保存のいらないメモアプリをRustで作ってMicrosoft Storeに出すまで"],
@@ -108,6 +112,109 @@ function SimpleCard({ title, children, links }: { title: string; children: React
   );
 }
 
+/**
+ * Highlights のカード。big は1段目の大きいカードで、画像も大きく出す。
+ * media は動画（.mp4）か画像。
+ */
+function HighlightCard({ href, eyebrow, title, lead, media, poster, mediaPos = "top", big }: {
+  href: string;
+  eyebrow: ReactNode;
+  title: ReactNode;
+  lead: ReactNode;
+  media: string;
+  poster?: string;
+  mediaPos?: string;
+  big?: boolean;
+}) {
+  return (
+    <Card sx={{ gridColumn: { sm: big ? "span 2" : "span 1", md: big ? "span 3" : "span 2" } }}>
+      <CardActionArea href={href} sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
+        <Box sx={{ p: 1.25, pb: 0 }}>
+          <Box
+            {...(media.endsWith(".mp4")
+              ? { component: "video", autoPlay: true, muted: true, loop: true, playsInline: true, preload: "metadata", poster }
+              : { component: "img", alt: "", loading: "lazy" })}
+            src={media}
+            sx={{
+              display: "block",
+              width: "100%",
+              height: { xs: 180, md: big ? 260 : 170 },
+              objectFit: "cover",
+              objectPosition: mediaPos,
+              border: 1,
+              borderColor: "divider",
+              borderRadius: 2,
+              bgcolor: "background.paper",
+            }}
+          />
+        </Box>
+        <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", p: big ? { xs: 2, md: 2.75 } : 2 }}>
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <Typography variant="h3" sx={{ fontSize: big ? { xs: "1.1rem", md: "1.3rem" } : "1.05rem", fontWeight: 700, lineHeight: 1.5, mb: 1 }}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 1.5 }}>
+            {lead}
+          </Typography>
+          <Typography color="primary" sx={{ mt: "auto", fontSize: 14, fontWeight: 600 }}>
+            詳しくはこちら →
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+}
+
+/** 社内システムの項目を、Highlights のカードにする */
+function WorkHighlight({ id, big }: { id: string; big?: boolean }) {
+  const w = WORK.find((w) => w.id === id)!;
+  const shot = w.shots![0];
+  return (
+    <HighlightCard
+      href={`work.html#${w.id}`}
+      eyebrow={<>社内システム ／ {w.when ?? w.period}</>}
+      title={w.title}
+      lead={w.lead}
+      media={shot.thumbSrc ?? shot.src}
+      poster={shot.poster}
+      mediaPos={shot.thumbPos}
+      big={big}
+    />
+  );
+}
+
+/** 連絡先のメールアドレス。収集ツールに拾われにくいように、ソースには @ の前後を分けて書き、表示するときに組み立てる */
+const MAIL = ["hirosugu.dev", "gmail.com"].join("@");
+
+/** メールアドレスと、押すとクリップボードにコピーするボタン */
+function MailBox() {
+  const [copied, setCopied] = useState(false);
+  const copy = () =>
+    navigator.clipboard.writeText(MAIL).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  return (
+    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.5, px: { xs: 2, md: 2.75 }, py: 2, border: 1, borderColor: "divider", borderRadius: 3, bgcolor: "background.paper" }}>
+      {/* スマホではアドレスで1行使い、ボタンはその下に並べる */}
+      <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 auto" }, minWidth: 0 }}>
+        <Typography color="textSecondary" sx={{ fontSize: 13, fontWeight: 600 }}>
+          メール
+        </Typography>
+        <Link href={`mailto:${MAIL}`} underline="hover" color="textPrimary" sx={{ fontSize: { xs: "1.05rem", md: "1.25rem" }, fontWeight: 700, wordBreak: "break-all" }}>
+          {MAIL}
+        </Link>
+      </Box>
+      <Button onClick={copy} variant="outlined" size="small" aria-live="polite">
+        {copied ? "コピーしました" : "コピー"}
+      </Button>
+      <Button href={`mailto:${MAIL}`} variant="contained" disableElevation size="small">
+        メールを送る
+      </Button>
+    </Box>
+  );
+}
+
 function ArticleList({ items }: { items: [string, string][] }) {
   return (
     <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0 }}>
@@ -131,8 +238,8 @@ export function Home() {
   return (
     <>
       {/* ============ About ============ */}
-      <Section id="about" title="About">
-        {/* PC では左に写真、右に紹介文と経歴。スマホでは写真を上に置く */}
+      <Section id="about" title="About" backdrop={<AboutBackdrop />}>
+        {/* PC では左に写真、右に紹介文。スマホでは写真を上に置く */}
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "200px minmax(0, 1fr)" }, columnGap: { sm: 5 }, rowGap: 3, alignItems: "start" }}>
         <Box>
         <Box
@@ -158,9 +265,34 @@ export function Home() {
           <p>情報系の授業は一度も受けたことがないのですが、大学院は独学で情報科学研究科を受験して合格しました。</p>
           <p>アルバイト以外でも、普段使っていて不便だなと思ったものは自分で作って解決するようにしています。最近だと、自作のメモアプリをMicrosoft Storeに公開しました。</p>
         </Prose>
+        </Box>
+        </Box>
+      </Section>
 
-        {/* 経歴は紹介文のすぐ下に続ける（左の列は写真とタグ） */}
-        <Box component="ol" sx={{ listStyle: "none", m: 0, mt: 4.5, p: 0, borderLeft: 2, borderColor: "divider" }}>
+      {/* ============ Highlights ============ */}
+      {/* 一押しだけを、自己紹介のすぐ下で先に見せる。全部は下の Projects と work.html にある */}
+      <Section id="highlights" title="Highlights">
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "repeat(2, minmax(0, 1fr))", md: "repeat(6, minmax(0, 1fr))" }, gap: 2.5 }}>
+          <HighlightCard
+            href={RMEMO_SITE}
+            eyebrow="個人開発 ／ Microsoft Store で公開中"
+            title="Rmemo：保存のいらないメモアプリ"
+            lead={<>どの画面からでも <Kbd>Ctrl</Kbd> + <Kbd>N</Kbd> で一瞬で開いて、書いたら勝手に保存されます。Rust で軽く作り、Microsoft Store に出すところまでやりました</>}
+            media="assets/rmemo/demo.mp4"
+            poster="assets/rmemo/demo-poster.jpg"
+            big
+          />
+          <WorkHighlight id="test" big />
+          {HIGHLIGHT_WORK.map((id) => (
+            <WorkHighlight key={id} id={id} />
+          ))}
+        </Box>
+      </Section>
+
+      {/* ============ History ============ */}
+      {/* 経歴。一押しを先に見せたいので、About から分けて Highlights の後ろに回した */}
+      <Section id="history" title="History" side>
+        <Box component="ol" sx={{ listStyle: "none", m: 0, p: 0, borderLeft: 2, borderColor: "divider" }}>
           {TIMELINE.map(([when, what]) => (
             <Box
               component="li"
@@ -192,8 +324,6 @@ export function Home() {
               <Typography>{what}</Typography>
             </Box>
           ))}
-        </Box>
-        </Box>
         </Box>
       </Section>
 
@@ -375,7 +505,7 @@ export function Home() {
       </Section>
 
       {/* ============ Writing ============ */}
-      <Section id="writing" title="Writing" narrow>
+      <Section id="writing" title="Writing" side>
         <Typography color="textSecondary" sx={{ fontWeight: 700, mb: 1 }}>
           Zenn
         </Typography>
@@ -387,7 +517,7 @@ export function Home() {
       </Section>
 
       {/* ============ Skills ============ */}
-      <Section id="skills" title="Skills" narrow>
+      <Section id="skills" title="Skills" side>
         <Stack spacing={2.75}>
           {SKILLS.map(([group, items]) => (
             <Box key={group}>
@@ -404,6 +534,25 @@ export function Home() {
             </Box>
           ))}
         </Stack>
+      </Section>
+
+      {/* ============ Contact ============ */}
+      <Section id="contact" title="Contact" side>
+        <Typography sx={{ mb: 2.5 }}>研究のことや、インターン・開発のお話など、お気軽にご連絡ください。</Typography>
+        <MailBox />
+        {/* フッターと同じアカウント */}
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: "repeat(4, minmax(0, 1fr))" }, gap: 1.5, mt: 1.5 }}>
+          {SOCIAL.map(([href, label, handle]) => (
+            <Card key={href}>
+              <CardActionArea href={href} sx={{ px: 2, py: 1.5 }}>
+                <Typography color="textSecondary" sx={{ fontSize: 13, fontWeight: 600 }}>
+                  {label}
+                </Typography>
+                <Typography sx={{ fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{handle}</Typography>
+              </CardActionArea>
+            </Card>
+          ))}
+        </Box>
       </Section>
     </>
   );

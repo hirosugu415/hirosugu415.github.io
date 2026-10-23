@@ -435,7 +435,7 @@ export const WORK: WorkItem[] = [
       </>
     ),
     shots: [
-      { ...shot("test-result.gif", "テストの実行結果"), view: "assets/work/test-result-view.gif", thumbSrc: "assets/work/test-result-thumb.png", thumbPos: "bottom" },
+      { ...shot("test-result.gif", "テストの実行結果"), view: "assets/work/test-result-view.gif", thumbSrc: "assets/work/test-result-thumb.png", thumbPos: "left bottom" },
       shot("form-error.gif", "入力エラーはバックエンドから返して、フォームの下に表示", true),
     ],
   },
