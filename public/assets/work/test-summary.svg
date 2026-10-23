@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360">
+  <style>
+    .bg { fill: #fafafb; } .panel { fill: #ffffff; stroke: #d5d8df; }
+    .line { fill: #16181d; font: 20px "Cascadia Code", Consolas, "Yu Gothic UI", monospace; }
+    .ok { fill: #15803d; } .dim { fill: #5f6672; font: 18px "Cascadia Code", Consolas, monospace; }
+    .big { fill: #15803d; font: 700 54px "Segoe UI", sans-serif; } .skip { fill: #b45309; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1e2026; } .panel { fill: #17181c; stroke: #3a3e48; }
+      .line { fill: #e8e9ec; } .ok { fill: #4ade80; } .dim { fill: #9ca2ad; } .big { fill: #4ade80; } .skip { fill: #fbbf24; }
+    }
+  </style>
+  <rect class="bg" width="800" height="360"/>
+  <rect class="panel" x="28" y="24" width="744" height="312" rx="16"/>
+  <text class="line" x="60" y="72"><tspan class="ok">✓</tspan> 移動履歴は新しい順に返る</text>
+  <text class="line" x="60" y="106"><tspan class="ok">✓</tspan> 権限者は在庫を削除できる</text>
+  <text class="line" x="60" y="140"><tspan class="ok">✓</tspan> 権限のないユーザーは在庫を削除できない</text>
+  <text class="line" x="60" y="174"><tspan class="ok">✓</tspan> 未認証では401を返す</text>
+  <text class="big" x="60" y="256">304 passed</text>
+  <text class="dim" x="62" y="300"><tspan class="skip">1 skipped</tspan>・1508 assertions・51.69s</text>
+</svg>

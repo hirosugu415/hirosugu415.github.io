@@ -86,13 +86,17 @@ export const WORK: WorkItem[] = [
     body: (
       <>
         <Step label="課題">
-          <p>本番サーバーの環境構築を担当しました。最初はDockerで動かしていたのですが、不安定でした。「サーバーが動かない」と何度も報告があり、出勤して状況を確認すると毎回Dockerが落ちていました。しかし、電源を抜いて指し直しても、自動復旧して僕の前で同じ状況が起こることはありませんでした。このような再現性のない問題に頭を悩ませていました。</p>
+          <p>本番サーバーの環境構築を担当しました。最初はDockerで動かしていたのですが、不安定でした。「サーバーが動かない」と何度も報告があり、出勤して状況を確認すると毎回Dockerが落ちていました。しかし、電源を抜いて挿し直しても、きちんと自動復旧して僕の前で同じ状況が起こることはありませんでした。メモリ不足やコンテナ再起動設定の問題も疑いましたが、どちらも正常でした。このような再現性のない問題に頭を悩ませていました。</p>
         </Step>
         <Step label="やったこと">
           <p>Dockerを諦めてnginxとphp-fpmを直接インストールする構成に移しました。環境の同期が難しいものの、それからサーバーが落ちることはなくなりました。</p>
         </Step>
+        <Step label="振り返り">
+          <p>当時は原因を突き止められませんでした。今なら、まず<C>docker inspect</C>で終了コードと<C>OOMKilled</C>を見て、<C>journalctl -u docker</C>や<C>dmesg</C>で落ちた時刻のログを確認します。再現しない問題こそ、落ちた瞬間の記録を残しておくことが大事だと学びました。</p>
+        </Step>
       </>
     ),
+    shots: [shot("server-diagram.svg", "Dockerをやめて、nginxとphp-fpmを直接入れた")],
   },
   {
     id: "changelog",
@@ -249,7 +253,7 @@ export const WORK: WorkItem[] = [
       </>
     ),
     shots: [
-      { ...shot("mobile-collect.mp4", "数を入れてEnter。次の部品へ自動で進む", true), poster: "assets/work/mobile-collect-poster.jpg" },
+      { ...shot("mobile-collect.mp4", "数を入れてEnter。次の部品へ自動で進む", true), poster: "assets/work/mobile-collect-poster.jpg", thumbSrc: "assets/work/mobile-collect-poster.jpg" },
     ],
   },
   {
@@ -435,7 +439,7 @@ export const WORK: WorkItem[] = [
       </>
     ),
     shots: [
-      { ...shot("test-result.gif", "テストの実行結果"), view: "assets/work/test-result-view.gif", thumbSrc: "assets/work/test-result-thumb.png", thumbPos: "left bottom" },
+      { ...shot("test-result.gif", "テストの実行結果"), view: "assets/work/test-result-view.gif", thumbSrc: "assets/work/test-summary.svg" },
       shot("form-error.gif", "入力エラーはバックエンドから返して、フォームの下に表示", true),
     ],
   },

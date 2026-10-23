@@ -260,9 +260,9 @@ export function DummyNote() {
   );
 }
 
-const STEP_COLOR = { 課題: "warning.main", やったこと: "primary.main", 結果: "success.main" } as const;
+const STEP_COLOR = { 課題: "warning.main", やったこと: "primary.main", 結果: "success.main", 振り返り: "text.secondary" } as const;
 
-/** 本文を「課題 → やったこと → 結果」に分ける、小さなラベルつきのまとまり */
+/** 本文を「課題 → やったこと → 結果」に分ける、小さなラベルつきのまとまり。振り返りは、今ならどうするかを書く */
 export function Step({ label, children }: { label: keyof typeof STEP_COLOR; children: ReactNode }) {
   return (
     <Box sx={{ mb: 2.25, "&:last-child": { mb: 0 } }}>

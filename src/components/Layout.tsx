@@ -3,11 +3,11 @@ import { AppBar, Box, Container, CssBaseline, IconButton, Link, Menu, MenuItem, 
 import { theme } from "../theme";
 
 // "#about" のようなページ内リンクは、トップページ上のセクションを指す。work.html からは "./#about" のようにトップへ戻る。
-// Works だけは別のページ（社内システムの詳細）へのリンク。
+// 社内システム詳細だけは別のページ（work.html）へのリンク。Projects と区別がつくように、名前で中身を言う。
 const NAV = [
   ["#about", "About"],
   ["#projects", "Projects"],
-  ["work.html", "Works"],
+  ["work.html", "社内システム詳細"],
   ["#learning", "Learning"],
   ["#writing", "Writing"],
   ["#skills", "Skills"],
@@ -24,8 +24,11 @@ export const SOCIAL = [
 /** wide のときの最大幅。詳細ページは画像を大きく見せたいので、トップより広くする */
 const WIDE = 1440;
 
-/** この幅以下では、ナビが入りきらないのでハンバーガーメニューにまとめる */
-const NARROW = "@media (max-width: 460px)";
+/**
+ * この幅以下では、ナビが入りきらないのでハンバーガーメニューにまとめる。
+ * 横スクロールで逃がすと、続きがあることに気づかれにくいので、入りきる幅まで余裕をもって切り替える
+ */
+const NARROW = "@media (max-width: 720px)";
 
 export function Layout({ children, onTop, wide }: { children: ReactNode; onTop: boolean; wide?: boolean }) {
   const base = onTop ? "" : "./";
@@ -126,7 +129,7 @@ export function Layout({ children, onTop, wide }: { children: ReactNode; onTop: 
  * side にすると、PC では見出しを左の列に置き、中身を右の列に置く。左の列は About の写真の列と同じ幅なので、
  * 中身の左端が About の紹介文とそろう。文章や一覧のように、横いっぱいに広げると読みにくいセクションに使う。
  */
-export function Section({ id, title, children, wide, backdrop, side }: { id?: string; title?: ReactNode; children: ReactNode; wide?: boolean; backdrop?: ReactNode; side?: boolean }) {
+export function Section({ id, title, children, wide, backdrop, side, first }: { id?: string; title?: ReactNode; children: ReactNode; wide?: boolean; backdrop?: ReactNode; side?: boolean; first?: boolean }) {
   const heading = title && (
     <Typography
       variant="h2"
@@ -147,7 +150,8 @@ export function Section({ id, title, children, wide, backdrop, side }: { id?: st
       component="section"
       id={id}
       // backdrop のはみ出しは clip で切る。hidden にすると、中の position: sticky（work.html の学年の目次）が効かなくなる
-      sx={{ position: "relative", overflow: backdrop ? "clip" : undefined, py: { xs: 6.5, md: 9 }, "section + &": { borderTop: 1, borderColor: "divider" } }}
+      // first はページの一番上のセクション。すぐ上はヘッダーなので、セクション同士を離すための上の余白を詰める
+      sx={{ position: "relative", overflow: backdrop ? "clip" : undefined, py: { xs: 6.5, md: 4 }, ...(first && { pt: { xs: 3, md: 4 } }), "section + &": { borderTop: 1, borderColor: "divider" } }}
     >
       {backdrop}
       <Container maxWidth={wide ? false : "lg"} sx={{ position: "relative", maxWidth: wide ? WIDE : undefined }}>

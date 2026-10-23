@@ -238,7 +238,16 @@ export function Home() {
   return (
     <>
       {/* ============ About ============ */}
-      <Section id="about" title="About" backdrop={<AboutBackdrop />}>
+      <Section id="about" backdrop={<AboutBackdrop />}>
+        {/* 開いてすぐ、名前と一言で何をしてきた人かが伝わるようにする */}
+        <Box sx={{ mb: { xs: 4, md: 5 } }}>
+          <Typography component="h1" sx={{ fontSize: { xs: "2.2rem", md: "3rem" }, fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
+            Hirosugu
+          </Typography>
+          <Typography sx={{ mt: 1.5, fontSize: { xs: "1.05rem", md: "1.3rem" }, fontWeight: 600, lineHeight: 1.7, color: "text.secondary", maxWidth: "36em" }}>
+            化学科から情報科学研究科へ。社内システムを3年間開発し、メモアプリ「Rmemo」を Microsoft Store で公開。
+          </Typography>
+        </Box>
         {/* PC では左に写真、右に紹介文。スマホでは写真を上に置く */}
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "200px minmax(0, 1fr)" }, columnGap: { sm: 5 }, rowGap: 3, alignItems: "start" }}>
         <Box>

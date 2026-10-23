@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360">
+  <style>
+    .bg { fill: #fafafb; } .box { fill: #ffffff; stroke: #d5d8df; } .inner { fill: #f1f3f6; stroke: #d5d8df; }
+    .t { fill: #16181d; font: 600 22px "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif; }
+    .s { fill: #5f6672; font: 17px "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif; }
+    .bad { fill: #c2410c; } .good { fill: #15803d; } .arrow { stroke: #2563eb; fill: #2563eb; }
+    .dash { fill: none; stroke: #c2410c; stroke-dasharray: 6 5; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1e2026; } .box { fill: #17181c; stroke: #3a3e48; } .inner { fill: #23262d; stroke: #3a3e48; }
+      .t { fill: #e8e9ec; } .s { fill: #9ca2ad; } .bad { fill: #fb923c; } .good { fill: #4ade80; }
+      .arrow { stroke: #60a5fa; fill: #60a5fa; } .dash { stroke: #fb923c; }
+    }
+  </style>
+  <rect class="bg" width="800" height="360"/>
+  <!-- 前：Docker の中で動かす -->
+  <text class="s" x="190" y="52" text-anchor="middle">最初の構成</text>
+  <rect class="box" x="40" y="70" width="300" height="230" rx="16"/>
+  <rect class="dash" x="62" y="92" width="256" height="150" rx="12" stroke-width="2"/>
+  <text class="s" x="80" y="122">Docker</text>
+  <rect class="inner" x="80" y="136" width="104" height="48" rx="8"/>
+  <text class="t" x="132" y="168" text-anchor="middle">nginx</text>
+  <rect class="inner" x="196" y="136" width="104" height="48" rx="8"/>
+  <text class="t" x="248" y="168" text-anchor="middle">php-fpm</text>
+  <text class="s" x="190" y="225" text-anchor="middle">Laravel</text>
+  <text class="t bad" x="190" y="280" text-anchor="middle">ときどき落ちる</text>
+  <!-- 矢印 -->
+  <line class="arrow" x1="360" y1="185" x2="428" y2="185" stroke-width="4"/>
+  <path class="arrow" d="M440 185 L424 175 L424 195 Z"/>
+  <!-- 後：サーバーに直接入れる -->
+  <text class="s" x="610" y="52" text-anchor="middle">移した構成</text>
+  <rect class="box" x="460" y="70" width="300" height="230" rx="16"/>
+  <text class="s" x="500" y="122">サーバーに直接</text>
+  <rect class="inner" x="500" y="136" width="104" height="48" rx="8"/>
+  <text class="t" x="552" y="168" text-anchor="middle">nginx</text>
+  <rect class="inner" x="616" y="136" width="104" height="48" rx="8"/>
+  <text class="t" x="668" y="168" text-anchor="middle">php-fpm</text>
+  <text class="s" x="610" y="225" text-anchor="middle">Laravel</text>
+  <text class="t good" x="610" y="280" text-anchor="middle">落ちなくなった</text>
+</svg>

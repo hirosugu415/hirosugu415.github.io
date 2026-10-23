@@ -187,7 +187,7 @@ export function Work() {
   let n = 0;
   return (
     <>
-      <Section wide>
+      <Section wide first>
         <Box sx={{ mb: 2.5 }}>
           <Back />
         </Box>
